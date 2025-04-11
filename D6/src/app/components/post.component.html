@@ -1,0 +1,46 @@
+<head>
+  <link rel="stylesheet" href="post.component.css">
+</head>
+<div>
+  <h3>Dodaj post</h3>
+  <textarea [(ngModel)]="newPostContent" rows="3"></textarea><br />
+  <button (click)="addPost()">Opublikuj</button>
+</div>
+
+<hr />
+<div *ngIf="isLoggedIn()">
+  <!-- pola do tworzenia posta i komentarzy -->
+<div *ngFor="let post of posts">
+  <ng-container *ngIf="editingPost?.id === post.id; else view">
+    <textarea [(ngModel)]="editingPost!.content"></textarea>
+    <button (click)="saveEdit()">Zapisz</button>
+    <button (click)="editingPost = null">Anuluj</button>
+  </ng-container>
+  <ng-template #view>
+    <p><b>{{ post.author }}</b>: {{ post.content }}</p>
+    <button (click)="editPost(post)">Edytuj</button>
+    <button (click)="deletePost(post.id)">Usuń</button>
+  </ng-template>
+
+  <div>
+    <h5>Komentarze</h5>
+    <div *ngFor="let c of post.comments; let i = index">
+      <div *ngIf="editingCommentIndex[post.id] === i; else commentView">
+        <input [(ngModel)]="editedCommentContent[post.id]" />
+        <button (click)="saveCommentEdit(post.id)">Zapisz</button>
+        <button (click)="editingCommentIndex[post.id] = null">Anuluj</button>
+      </div>
+      <ng-template #commentView>
+        <p>{{ c.author }}: {{ c.content }}</p>
+        <button (click)="startEditComment(post.id, i, c.content)">Edytuj</button>
+        <button (click)="deleteComment(post.id, i)">Usuń</button>
+      </ng-template>
+    </div>
+    <input [(ngModel)]="newComment[post.id]" placeholder="Dodaj komentarz" />
+    <button (click)="addComment(post.id)">Dodaj</button>
+  </div>
+
+  <hr />
+</div>
+
+</div>
