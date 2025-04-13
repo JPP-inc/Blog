@@ -1,0 +1,32 @@
+<head>
+    <link rel="stylesheet" href="profile.component.css">
+</head>
+<div *ngIf="editingUser; else userList">
+  <form (submit)="$event.preventDefault(); saveUser()">
+    <label>Email:
+      <input type="email" [(ngModel)]="editingUser.email" name="email" required />
+    </label><br />
+
+    <label>Hasło:
+      <input type="password" [(ngModel)]="editingUser.password" name="password" required />
+    </label><br />
+
+    <label>Imię:
+      <input type="text" [(ngModel)]="editingUser.name" name="name" />
+    </label><br />
+
+    <button type="submit">Zapisz</button>
+    <button type="button" (click)="cancelEdit()">Anuluj</button>
+  </form>
+</div>
+
+<ng-template #userList>
+  <h3>Lista użytkowników</h3>
+  <ul>
+    <li *ngFor="let user of users">
+      {{ user.email }} ({{ user.name }})
+      <button (click)="editUser(user)">Edytuj</button>
+      <button (click)="deleteUser(user)">Usuń</button>
+    </li>
+  </ul>
+</ng-template>
